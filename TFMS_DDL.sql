@@ -1,60 +1,54 @@
 create database TFMS;
 use TFMS;
-DROP TABLE IF EXISTS Trainer;
-CREATE TABLE Trainer
-(
-	T_id INT PRIMARY KEY,
-    T_name VARCHAR(35),
-	Track ENUM('Java','dotnet','mainframe','testing'),
-    T_qualification VARCHAR(30),
-    T_experience INT
+Drop table if exists trainer;
+create table trainer(
+trainer_id varchar(10) PRIMARY KEY,
+trainer_name varchar(255),
+trainer_track enum('Java','dotnet','mainframe','testing'),
+trainer_qual varchar(255),
+trainer_exp varchar(3)
+);
+
+Drop table if exists trainee;
+create table trainee(
+trainee_id varchar(10) PRIMARY KEY,
+trainee_name varchar(255),
+trainee_track enum('Java','dotnet','mainframe','testing'),
+trainee_qual varchar(255),
+trainee_exp varchar(3)
+);
+
+Drop table if exists batch;
+create table batch(
+topic_name varchar(255),
+batch_duration integer, 
+start_date date,
+end_date date,
+trainer_id varchar(10),
+FOREIGN KEY (trainer_id) REFERENCES trainer(trainer_id),
+trainee_id varchar(10),
+FOREIGN KEY (trainee_id) REFERENCES trainee(trainee_id)
 );
 
 
-
-DROP TABLE IF EXISTS Associate ;
-CREATE TABLE Associate
-(
-	A_id INT PRIMARY KEY,
-    A_name VARCHAR(35),
-    Track ENUM('Java','dotnet','mainframe','testing'),
-    A_qualification VARCHAR(30),
-    A_experience INT
+Drop table if exists question_management;
+create table question_management(
+question_id varchar(10) primary key,
+question_section enum('Instructor','Course Material','Learning Effectiveness','Environment','Job Impact'),
+question_text varchar(300)
 );
 
 
-
-DROP TABLE IF EXISTS Batch;
-CREATE TABLE Batch
-(
-	Name_of_the_topic VARCHAR(45),
-    Duration INT,
-    Start_date DATE,
-    End_date DATE,
-    T_id INT REFERENCES Trainer(T_id),
-    A_id INT REFERENCES Associate(A_id)
-);
-
-
-
-DROP TABLE IF EXISTS Question_management;
-CREATE TABLE Question_management
-(
-	Q_id varchar(10) PRIMARY KEY,
-    Q_section ENUM('Instructor','Course Material','Learning Effectiveness','Environment','Job Impact'),
-    Q_text TEXT
-);
-
-
-
-DROP TABLE IF EXISTS Capture_feedback;
-CREATE TABLE Capture_feedback
-(
-	Name_of_the_topic VARCHAR(45),
-    Q_section ENUM('Instructor','Course Material','Learning Effectiveness','Environment','Job Impact'),
-    Q_text TEXT,
-    Rating INT,
-    Q_id INT REFERENCES Question_management(Q_id),
-    T_id INT REFERENCES Trainer(T_id),
-    A_id INT REFERENCES Associate(A_id)
+Drop table if exists capture_feedback;
+create table capture_feedback(
+trainer_id varchar(10),
+FOREIGN KEY (trainer_id) REFERENCES trainer(trainer_id),
+trainee_id varchar(10),
+FOREIGN KEY (trainee_id) REFERENCES trainee(trainee_id),
+topic_name varchar(255),
+question_id varchar(10),
+foreign key (question_id) references question_management(question_id),
+question_section enum('Instructor','Course Material','Learning Effectiveness','Environment','Job Impact'),
+question_text varchar(255),
+rating int
 );
